@@ -11,6 +11,9 @@ TILE = 45
 # set game resolution
 GAME_RES = W * TILE, H * TILE
 RES = 1050, 940
+PIECE_RES = 180, 180
+SCORE_RES = 100, 100
+
 # set FPS
 FPS = 60
 
@@ -20,6 +23,8 @@ pygame.init()
 sc = pygame.display.set_mode(RES)
 # set game screen to be resolution
 game_sc = pygame.Surface(GAME_RES, pygame.SRCALPHA, 32)
+piece_sc = pygame.Surface(PIECE_RES, pygame.SRCALPHA, 32)
+score_sc = pygame.Surface(SCORE_RES, pygame.SRCALPHA, 32)
 # create an object to help track time
 clock = pygame.time.Clock()
 
@@ -68,6 +73,8 @@ while True:
     dx, rotate = 0, False
     sc.blit(bg, (310, 0))
     sc.blit(game_sc, (20, 20))
+    sc.blit(piece_sc, (674, 460))
+    sc.blit(score_sc, (750, 750))
 
     # delay for full lines
     for i in range(lines):
@@ -75,6 +82,8 @@ while True:
 
     # fill game screen with black
     game_sc.fill(pygame.Color('black'))
+    piece_sc.fill(pygame.Color('white'))
+    score_sc.fill(pygame.Color('white'))
 
     # control 
     # keep game window open until x button is clicked
@@ -167,7 +176,7 @@ while True:
         pygame.draw.rect(sc, next_color, figure_rect)
 
     sc.blit(title_score, (535, 780))
-    sc.blit(font.render(str(score), True, pygame.Color('white')), (550,840))
+    sc.blit(font.render(str(score), True, pygame.Color('green')), (550,840))
 
     for i in range(W):
         if field[0][i]:
