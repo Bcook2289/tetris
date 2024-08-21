@@ -12,7 +12,7 @@ TILE = 45
 GAME_RES = W * TILE, H * TILE
 RES = 1050, 940
 PIECE_RES = 180, 180
-SCORE_RES = 100, 100
+SCORE_RES = 300, 100
 
 # set FPS
 FPS = 60
@@ -74,7 +74,7 @@ while True:
     sc.blit(bg, (310, 0))
     sc.blit(game_sc, (20, 20))
     sc.blit(piece_sc, (674, 460))
-    sc.blit(score_sc, (750, 750))
+    sc.blit(score_sc, (540, 797))
 
     # delay for full lines
     for i in range(lines):
@@ -82,8 +82,8 @@ while True:
 
     # fill game screen with black
     game_sc.fill(pygame.Color('black'))
-    piece_sc.fill(pygame.Color('white'))
-    score_sc.fill(pygame.Color('white'))
+    piece_sc.fill(pygame.Color('black'))
+    score_sc.fill(pygame.Color('black'))
 
     # control 
     # keep game window open until x button is clicked
