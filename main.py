@@ -2,7 +2,6 @@
 import pygame
 from random import choice, randrange
 from copy import deepcopy
-# colors = [(255, 0, 0), (255, 255, 0), (255, 150, 0), (0, 0, 255), (0, 255, 0), (0, 255, 255), (125, 0, 255)]
 
 # set width and height
 W, H = 10, 20
@@ -38,12 +37,24 @@ figure_pos = [
     [(-1, 0),(-1, 1),(0, 0),(0, -1)],   # Backwards Z piece
     [(0, 0),(-1, 0),(0, 1),(-1, -1)],   # Z piece
     [(0, 0),(0, -1),(0, 1),(-1, -1)],   # L piece
-    [(0, 0),(0, -1),(0, 1),(-1, -1)],   # Backwards L piece
+    [(0, 0),(0, -1),(0, 1),(-1, 1)],    # Backwards L piece
     [(0, 0),(0, -1),(0, 1),(-1, 0)]     # T piece
     ]
+    
+colors = {
+    "red":(255, 0, 0), 
+    "yellow": (255, 255, 0), 
+    "orange": (255, 150, 0), 
+    "blue":(0, 0, 255), 
+    "green": (0, 255, 0), 
+    "light blue":(0, 255, 255), 
+    "purple":(125, 0, 255)
+    }
 
 figures = [[pygame.Rect(x + W // 2, y + 1, 1,1) for x, y in fig_pos] for fig_pos in figure_pos]
 figure_rect = pygame.Rect(0, 0, TILE - 2, TILE - 2)
+
+# create the game grid
 field = [[0 for i in range(W)] for j in range(H)]
 
 anim_count, anim_speed, anim_limit = 0, 60, 2000
@@ -54,10 +65,25 @@ font = pygame.font.Font('./font/Silkscreen-Regular.ttf', 45)
 
 title_score = font.render('score:', True, pygame.Color('green'))
 
-get_color = lambda : (randrange(30, 256), randrange(30, 256), randrange(30, 256))
+get_color_random = lambda : (randrange(30, 256), randrange(30, 256), randrange(30, 256))
+def get_color(fig): 
+    if figures.index(fig) == 0:         # if straight piece
+        return colors["light blue"] 
+    elif figures.index(fig) == 1:       # if square piece
+        return colors["yellow"] 
+    elif figures.index(fig) == 2:       # if S piece
+        return colors["green"] 
+    elif figures.index(fig) == 3:       # if Z piece
+        return colors["red"]
+    elif figures.index(fig) == 4:       # if L piece
+        return colors["orange"] 
+    elif figures.index(fig) == 5:       # if J piece
+        return colors["blue"] 
+    elif figures.index(fig) == 6:       # if T piece
+        return colors["purple"] 
 
 figure, next_figure = deepcopy(choice(figures)), deepcopy(choice(figures))
-color, next_color = get_color(), get_color()
+color, next_color = get_color(figure), get_color(next_figure)
 
 score, lines = 0, 0
 scores = {0: 0, 1: 100, 2: 300, 3: 700, 4: 1500}
@@ -71,6 +97,8 @@ def check_borders():
 
 while True:
     dx, rotate = 0, False
+    
+    # create new screens
     sc.blit(bg, (310, 0))
     sc.blit(game_sc, (20, 20))
     sc.blit(piece_sc, (674, 460))
@@ -80,13 +108,12 @@ while True:
     for i in range(lines):
         pygame.time.wait(200)
 
-    # fill game screen with black
+    # fill game screen with black screens
     game_sc.fill(pygame.Color('black'))
     piece_sc.fill(pygame.Color('black'))
     score_sc.fill(pygame.Color('black'))
 
     # control 
-    # keep game window open until x button is clicked
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             exit()
@@ -119,7 +146,8 @@ while True:
                 for i in range(4):
                     field[figure_old[i].y][figure_old[i].x] = color
                 figure, color = next_figure, next_color
-                next_figure, next_color = deepcopy(choice(figures)), get_color()
+                next_figure = deepcopy(choice(figures))
+                next_color = get_color(next_figure)
                 anim_limit = 2000
                 break
 
@@ -154,7 +182,7 @@ while True:
     score += scores[lines]
 
     # draw the grid
-    [pygame.draw.rect(game_sc, (40, 40, 40), i_rect, 1) for i_rect in grid]
+    [pygame.draw.rect(game_sc, (50, 50, 50), i_rect, 1) for i_rect in grid]
 
     # draw the figures
     for i in range(4):
@@ -184,11 +212,10 @@ while True:
             anim_count, anim_speed, anim_limit = 0, 60, 2000
             score = 0
             for i_rect in grid:
-                pygame.draw.rect(game_sc, get_color(), i_rect)
+                pygame.draw.rect(game_sc, get_color_random(), i_rect)
                 sc.blit(game_sc, (20, 20))
                 pygame.display.flip()
                 clock.tick(200)
 
-    pygame.display.update()
     pygame.display.flip()
     clock.tick(FPS)
